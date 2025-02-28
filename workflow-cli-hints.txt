@@ -1,0 +1,38 @@
+1- Create a New Workflow Job Template
+
+- Get Organization and Inventory IDs:
+$ awx organizations list
+$ awx inventories list
+
+$ awx workflow_job_templates create --name "My Workflow" --organization vbs --inventory 1 --ask_variables_on_launch true
+
+
+2- Add Nodes to the Workflow
+
+Every node in the workflow represents a job template or approval step.
+
+- Get Available Job Templates:
+
+$ awx job_templates list
+
+-  Add the First Node:
+
+$ awx workflow_job_template_nodes create --workflow_job_template "My Workflow" --unified_job_template 5
+
+3- Add a Second Node (Connected to the First One)
+
+First, list nodes to get the node ID of Node A:
+
+$ awx workflow_job_template_nodes list --workflow_job_template "My Workflow"
+
+Now, use this Node A ID to create Node B as a child:
+
+$ awx workflow_job_template_nodes create --workflow_job_template "My Workflow" --unified_job_template 7 --success_nodes 10
+
+4- Verify the Workflow Structure
+
+$ awx workflow_job_template_nodes list --workflow_job_template "My Workflow"
+
+5- Launch the Workflow
+
+$ awx workflow_job_templates launch --id 16
